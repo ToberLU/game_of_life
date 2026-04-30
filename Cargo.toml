@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+rand = "0.10.1"
 raylib = "5.5.1"
 tracing = "0.1.44"
 tracing-appender = "0.2.5"
-tracing-subscriber = "0.3.23"
+tracing-subscriber = { version = "0.3.23", features = ["json", "local-time"] }
 
 [[bin]]
 name = "game_of_life"

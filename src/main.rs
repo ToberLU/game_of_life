@@ -1,9 +1,45 @@
+use tracing_appender::non_blocking::WorkerGuard;
+use tracing_subscriber::{
+    fmt::{Layer, time::LocalTime},
+    layer::SubscriberExt,
+};
+
+use crate::grid::Grid;
+
 mod grid;
 mod render;
 mod simulation;
 
+fn init_subscriber() -> WorkerGuard {
+    let file = tracing_appender::rolling::daily("./logs", "log");
+    let (non_blocking, guard) = tracing_appender::non_blocking(file);
+
+    let console = Layer::new()
+        .with_writer(std::io::stdout)
+        .with_timer(LocalTime::rfc_3339())
+        .pretty();
+
+    let inspector = Layer::new()
+        .with_writer(non_blocking)
+        .with_timer(LocalTime::rfc_3339())
+        .json();
+
+    let subscriber = tracing_subscriber::registry().with(console).with(inspector);
+
+    tracing::subscriber::set_global_default(subscriber).expect("Unable to set a global collector");
+
+    guard
+}
+
 fn main() {
-    tracing_subscriber::fmt::init();
+    let _guard = init_subscriber();
+    tracing::info!("Tracing subscriber initialized.");
+
+    let mut grid = Grid::new(50, 50);
+    grid.randomize(20);
+
     let mut renderer = render::RenderContext::new();
     renderer.run();
+
+    tracing::info!("Program end.");
 }

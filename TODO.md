@@ -7,13 +7,16 @@
 - [x] 2. Initialiser le projet avec Raylib, ouvrir une fenêtre vide
 - [x] 3. Ajouter `tracing` avec spans dans `render`
 
-### 🔄 En cours
-- [ ] 4. Configurer `tracing-appender` pour extraire les logs dans `logs/` (fichier par jour, append si même jour)
+### ✅ Niveau débutant - Terminé
+- [x] 1. Créer la structure de modules (`grid`, `simulation`, `render`)
+- [x] 2. Initialiser le projet avec Raylib, ouvrir une fenêtre vide
+- [x] 3. Ajouter `tracing` avec spans dans `render`
+- [x] 4. Configurer `tracing-appender` pour extraire les logs dans `logs/` (fichier par jour, append si même jour)
+- [x] 5. Créer la structure de grille 2D pour le Game of Life
 
 ### ⏳ À venir
 
 #### Niveau débutant (suite)
-- [ ] 5. Créer la structure de grille 2D pour le Game of Life
 - [ ] 6. Implémenter le calcul des voisins vivants
 
 #### Niveau intermédiaire
