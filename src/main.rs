@@ -4,7 +4,7 @@ use tracing_subscriber::{
     layer::SubscriberExt,
 };
 
-use crate::grid::Grid;
+use crate::{grid::Grid, simulation::Simulation};
 
 mod grid;
 mod render;
@@ -35,11 +35,10 @@ fn main() {
     let _guard = init_subscriber();
     tracing::info!("Tracing subscriber initialized.");
 
-    let mut grid = Grid::new(50, 50);
-    grid.randomize(20);
+    let mut simulation = Simulation::new(50, 50);
 
     let mut renderer = render::RenderContext::new();
-    renderer.run();
+    renderer.run(&simulation);
 
     tracing::info!("Program end.");
 }
