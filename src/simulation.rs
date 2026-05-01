@@ -1,9 +1,11 @@
+use std::time::Duration;
+
 use crate::grid::Grid;
 
 pub struct Simulation {
     pub grid: Grid,
     pub paused: bool,
-    pub delay_ms: i32,
+    pub delay_ms: Duration,
 }
 
 impl Simulation {
@@ -15,7 +17,7 @@ impl Simulation {
         Simulation {
             grid,
             paused: true,
-            delay_ms: 0,
+            delay_ms: Duration::from_millis(500),
         }
     }
 
@@ -26,11 +28,8 @@ impl Simulation {
             for j in 0..self.grid.width {
                 let is_alive = self.grid.cells[i * self.grid.width + j];
                 let neighbors = self.grid.count_live_neighbors(i, j);
-                new_cells[i * self.grid.width + j] = match (is_alive, neighbors) {
-                    (true, 2 | 3) => true,
-                    (false, 3) => true,
-                    _ => false,
-                };
+                new_cells[i * self.grid.width + j] =
+                    matches!((is_alive, neighbors), (true, 2 | 3) | (false, 3));
             }
         }
         self.grid.cells = new_cells;

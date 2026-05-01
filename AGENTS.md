@@ -66,6 +66,10 @@ cargo build
 cargo run
 ```
 
+## Gestion du projet
+- Toujours mettre à jour `TODO.md` quand des tâches sont complétées ou ajoutées
+- Toujours relire les fichiers concernés avant de répondre à une demande d'aide, correction ou validation
+
 ## Communication
 - Répondre en **français**
 - Être concis : pas de texte superflu

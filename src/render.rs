@@ -1,14 +1,16 @@
+use std::ops::Mul;
+
 use raylib::color::Color; //use raylib::consts::KeyboardKey;
 use raylib::drawing::RaylibDraw;
 use raylib::ffi::KeyboardKey;
 use raylib::{RaylibHandle, RaylibThread};
 use tracing::instrument;
 
-use crate::simulation::{Simulation};
+use crate::simulation::Simulation;
 //use raylib::{RaylibHandle};
 
-const WIDTH: i32 = 1000;
-const HEIGHT: i32 = 1000;
+const WIDTH: i32 = 800;
+const HEIGHT: i32 = 800;
 const SPACING: i32 = 0;
 const BORDER: i32 = 10;
 const FPS: u32 = 100;
@@ -45,29 +47,35 @@ impl RenderContext {
         let cell_height = (window_height - spaces_height) / simulation.grid.height as i32;
 
         draw.draw_rectangle_lines(
-            BORDER,
-            BORDER,
-            window_width,
-            window_height,
+            BORDER - 1,
+            BORDER - 1,
+            window_width + 1,
+            window_height + 1,
             Color::WHITE,
         );
-        
+
         for row in 0..simulation.grid.height {
             for col in 0..simulation.grid.width {
                 let color = match simulation.grid.cells[row * simulation.grid.width + col] {
                     true => Color::BLUE,
-                    _ => Color::BLACK
+                    _ => Color::BLACK,
                 };
-                draw.draw_rectangle( BORDER + (cell_width + SPACING) * col as i32, BORDER +
-                    (cell_height + SPACING) * row as i32, cell_width, cell_height, color,);
-                }
+                draw.draw_rectangle(
+                    BORDER + (cell_width + SPACING) * col as i32,
+                    BORDER + (cell_height + SPACING) * row as i32,
+                    cell_width,
+                    cell_height,
+                    color,
+                );
             }
         }
+    }
 
     #[instrument(skip(self, simulation))]
     pub fn run(&mut self, simulation: &mut Simulation) {
         tracing::info!("start render loop...");
 
+        let mut time = std::time::Instant::now();
         while !self.raylib_handle.window_should_close() {
             if self.raylib_handle.is_key_pressed(KeyboardKey::KEY_SPACE) {
                 simulation.paused = !simulation.paused;
@@ -75,9 +83,16 @@ impl RenderContext {
             if self.raylib_handle.is_key_pressed(KeyboardKey::KEY_R) {
                 simulation.grid.randomize(100);
             }
+            if self.raylib_handle.is_key_pressed(KeyboardKey::KEY_MINUS) {
+                simulation.delay_ms = simulation.delay_ms.mul(2);
+            }
+            if self.raylib_handle.is_key_pressed(KeyboardKey::KEY_EQUAL) {
+                simulation.delay_ms = simulation.delay_ms.div_f32(2.);
+            }
             let mut draw = self.raylib_handle.begin_drawing(&self.raylib_thread);
-            if !simulation.paused {
+            if !simulation.paused && time.elapsed() > simulation.delay_ms {
                 simulation.update();
+                time = std::time::Instant::now();
             }
             draw.clear_background(Color::BLACK);
             RenderContext::draw_grid(&mut draw, simulation);

@@ -12,7 +12,7 @@
 
 ### ✅ Niveau intermédiaire - En cours
 - [x] 7. Ajouter les contrôles clavier (pause avec SPACE, reset avec R)
-- [ ] 7b. Contrôle de vitesse (+, -)
+- [x] 7b. Contrôle de vitesse (+, -)
 - [ ] 8. Gérer les motifs initiaux (glider, pulsar)
 - [ ] 9. Implémenter un trait commun pour les règles de simulation
 
