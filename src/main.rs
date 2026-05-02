@@ -35,7 +35,7 @@ fn main() {
     let _guard = init_subscriber();
     tracing::info!("Tracing subscriber initialized.");
 
-    let mut simulation = Simulation::new(50, 50);
+    let mut simulation = Simulation::new(250, 250);
 
     let mut renderer = render::RenderContext::new();
     renderer.run(&mut simulation);

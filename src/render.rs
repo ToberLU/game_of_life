@@ -56,9 +56,15 @@ impl RenderContext {
 
         for row in 0..simulation.grid.height {
             for col in 0..simulation.grid.width {
-                let color = match simulation.grid.cells[row * simulation.grid.width + col] {
-                    true => Color::BLUE,
-                    _ => Color::BLACK,
+                //let color = match simulation.grid.cells[row * simulation.grid.width + col] {
+                //    true => Color::BLUE,
+                //    _ => Color::BLACK,
+                //}
+                let color = match (simulation.grid.cells[row * simulation.grid.width + col], simulation.grid.count_live_neighbors(row, col)) {
+                    (false, 3) => Color::DARKGRAY,
+                    (true, 2 | 3) => Color::BLUE,
+                    (true, _) => Color::DARKBLUE,
+                    (false, _) => Color::BLACK
                 };
                 draw.draw_rectangle(
                     BORDER + (cell_width + SPACING) * col as i32,
@@ -81,7 +87,7 @@ impl RenderContext {
                 simulation.paused = !simulation.paused;
             }
             if self.raylib_handle.is_key_pressed(KeyboardKey::KEY_R) {
-                simulation.grid.randomize(100);
+                simulation.grid.randomize(simulation.grid.width * simulation.grid.height / 20);
             }
             if self.raylib_handle.is_key_pressed(KeyboardKey::KEY_MINUS) {
                 simulation.delay_ms = simulation.delay_ms.mul(2);

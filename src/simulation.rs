@@ -12,7 +12,7 @@ impl Simulation {
     pub fn new(width: usize, height: usize) -> Self {
         tracing::info!("init Simulation");
         let mut grid = Grid::new(width, height);
-        grid.randomize(120);
+        grid.randomize((width * height) / 20);
 
         Simulation {
             grid,
